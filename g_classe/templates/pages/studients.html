@@ -1,0 +1,119 @@
+{% extends "layout/base.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-center text-primary">AJOUTER UN NOUVEAU &Eacute;L&Egrave;VE</h4>
+                    <hr>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <hr>
+                        <button class="btn btn-success btn-block" type="submit">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="col-md-8">
+        <div class="row card-group-row">
+            <div class="col-lg-4 col-md-4 card-group-row__col">
+                <div class="card card-group-row__card card-shadow">
+                    <div class="p-2 d-flex flex-row align-items-center">
+                        <div class="avatar avatar-xs mr-2">
+                            <span class="avatar-title rounded-circle text-center bg-success">
+                                <i class="material-icons text-white icon-18pt">group</i>
+                            </span>
+                        </div>
+                        <a href="#" class="text-dark">
+                            <strong>Présents: {{ PRE }}</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 card-group-row__col">
+                <div class="card card-group-row__card card-shadow">
+                    <div class="p-2 d-flex flex-row align-items-center">
+                        <div class="avatar avatar-xs mr-2">
+                            <span class="avatar-title rounded-circle text-center bg-warning">
+                                <i class="material-icons text-white fa fa-minus-circle"></i>
+                            </span>
+                        </div>
+                        <a href="#" class="text-dark">
+                            <strong>Absents: {{ ABS }}</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 card-group-row__col">
+                <div class="card card-group-row__card card-shadow">
+                    <div class="p-2 d-flex flex-row align-items-center">
+                        <div class="avatar avatar-xs mr-2">
+                            <span class="avatar-title rounded-circle text-center bg-danger">
+                                <i class="material-icons text-white icon-18pt">block</i>
+                            </span>
+                        </div>
+                        <a href="#" class="text-dark">
+                            <strong>Abandon: {{ ABA }}</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body table-responsive border-bottom" data-toggle="lists" data-lists-values='["js-lists-values-employee-name"]'>
+                <div class="search-form search-form--light m-3">
+                    <input type="text" class="form-control search" placeholder="Search">
+                    <button class="btn" type="button"><i class="material-icons">search</i></button>
+                </div>
+                <table class="table mb-0 thead-border-top-0">
+                    <thead>
+                    <tr>
+                        <th>NOM</th>
+                        <th>PRENOM(S)</th>
+                        <th>GENRE</th>
+                        <th>DATE DE NAISSANCE</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody class="list" id="studientTable">
+                    {% for item in items %}
+                        {% if item.status == 'ABA' %}<tr class="bg-danger">{% elif item.status == 'ABS' %}<tr class="bg-warning">{% else %}<tr>{% endif %}
+
+                            <td>{{ item.studient.nom }}</td>
+                            <td>{{ item.studient.prenom }}</td>
+                            <td>{{ item.studient.sexe }}</td>
+                            <td>{{ item.studient.naissance }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a type="button" href="#" class="text-muted" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'edit_studient' item.studient.pk %}">
+                                            <i class="fa fa-edit"></i> Modifier
+                                        </a>
+                                        <a class="dropdown-item" href="{% url 'change_studient_status' item.pk 'ABS' %}">
+                                            <i class="fa fa-minus-circle"></i> Absent
+                                        </a>
+                                        <a class="dropdown-item" href="{% url 'change_studient_status' item.pk 'ABA' %}">
+                                            <i class="fa fa-ban"></i> Abandon
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+        new Vue({
+            el: '#studientTable',
+            data:[]
+        })
+    </script>
+{% endblock extra_js %}

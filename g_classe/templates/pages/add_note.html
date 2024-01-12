@@ -1,0 +1,46 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-lg">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nom et Prénom(s)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="noteComponent">
+                    {% for studient in studients %}
+                        <tr>
+                            <td>{{ studient.studient.nom }} {{ studient.studient.prenom }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary d-inline-flex" data-toggle="modal" data-target="#modal-standard" data-id="{{ studient.studient.pk }}" data-studient="{{ studient.studient.nom }} {{ studient.studient.prenom }}">Noter</button>
+                            <a href="{% url 'view_note' studient.studient.pk %}" class="btn btn-primary d-inline-flex">Voir les notes</a>
+                        </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+    (function() {
+        'use strict';
+        $('#modal-standard').on('show.bs.modal', function(e) {
+            var btn = $(e.relatedTarget);
+            var studient = btn.data('studient');
+            var studientId = btn.data('id');
+            var modal = $(this);
+            modal.find('.modal-title').text(studient);
+            modal.find('.modal-body input.studient_id').val(studientId);
+        })
+
+    })()
+</script>
+{% endblock extra_js %}

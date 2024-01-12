@@ -1,0 +1,83 @@
+<div class="mdk-drawer  js-mdk-drawer" id="default-drawer" data-align="start">
+    <div class="mdk-drawer__content">
+        <div class="sidebar sidebar-light sidebar-left" data-perfect-scrollbar>
+            <div class="sidebar-heading sidebar-m-t">Gestion de la classe</div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item {% if 'home' in url %} active {% endif %}">
+                    <a class="sidebar-menu-button" href="{% url 'home' %}">
+                        <span class="sidebar-menu-icon d-flex align-items-center sidebar-menu-icon--left">
+                            <i class="fa fa-home"></i>
+                        </span>
+                        <span class="sidebar-menu-text">Accueil</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {% if '/studient' in request.path %} active {% endif %}">
+                    <a class="sidebar-menu-button" href="{% url 'studient' %}">
+                        <span class="sidebar-menu-icon d-flex align-items-center sidebar-menu-icon--left">
+                            <i class="fa fa-list"></i>
+                        </span>
+                        <span class="sidebar-menu-text">Liste des &eacute;l&egrave;ves</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {% if '/note' in request.path %} active {% endif %}">
+                    <a class="sidebar-menu-button" href="{% url 'note' %}">
+                        <span class="sidebar-menu-icon d-flex align-items-center sidebar-menu-icon--left">
+                            <i class="fa fa-pen"></i>
+                        </span>
+                        <span class="sidebar-menu-text">Notes des &eacute;l&egrave;ves</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {% if '/edit_note' in request.path %} active {% endif %}">
+                    <a class="sidebar-menu-button" href="{% url 'edit_note' %}">
+                        <span class="sidebar-menu-icon d-flex align-items-center sidebar-menu-icon--left">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                        <span class="sidebar-menu-text">Ajouter des notes</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {% if '/synoptique' in request.path %} active {% endif %}">
+                    <a class="sidebar-menu-button" href="{% url 'synoptique' %}">
+                        <span class="sidebar-menu-icon d-flex align-items-center sidebar-menu-icon--left">
+                            <i class="fa fa-database"></i>
+                        </span>
+                        <span class="sidebar-menu-text">Tableau synoptique</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-heading">Param&egrave;tres</div>
+            <div class="sidebar-block p-0">
+                <ul class="sidebar-menu" id="components_menu">
+                    <li class="sidebar-menu-item {% if '/setting' in request.path %} active {% endif %}">
+                        <a class="sidebar-menu-button" href="{% url 'setting' %}">
+                            <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">settings</i>
+                            <span class="sidebar-menu-text">R&eacute;glage</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item {% if '/drag_studient' in request.path %} active {% endif %}">
+                        <a class="sidebar-menu-button" href="{% url 'drag_studient' %}">
+                            <i class="sidebar-menu-icon sidebar-menu-icon--left fa fa-exchange-alt"></i>
+                            <span class="sidebar-menu-text">R&eacute;affectation</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-heading">Autres</div>
+            <div class="sidebar-block p-0">
+                <ul class="sidebar-menu" id="components_menu">
+                    <li class="sidebar-menu-item {% if '/guide' in request.path %} active {% endif %}">
+                        <a class="sidebar-menu-button" href="{% url 'guide' %}">
+                            <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">book</i>
+                            <span class="sidebar-menu-text">Documentation</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item {% if '/propos' in request.path %} active {% endif %}">
+                        <a class="sidebar-menu-button" href="{% url 'propos' %}">
+                            <i class="sidebar-menu-icon sidebar-menu-icon--left fa fa-code-branch"></i>
+                            <span class="sidebar-menu-text">A propos</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

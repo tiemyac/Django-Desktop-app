@@ -1,0 +1,56 @@
+{% extends 'layout/base.html' %}
+{% load tag %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1>RECAPITULATIF DES NOTES</h1>
+        <hr>
+        <h6>
+            <span class="mr-5">
+                &Eacute;l&egrave;ve : <strong>{{ studient.studient.nom }} {{ studient.studient.prenom }}</strong>
+            </span>
+            <span class="mr-5">
+                Classe : <strong>{{ classe }}</strong>
+            </span>
+            <span>
+                Ann&eacute;e scolaire : <strong>{{ annee_scolaire }}</strong>
+            </span>
+        </h6>
+        {% if not items %}
+        <h1 class="text-warning text-center mt-5">Aucune note attribuée</h1>
+        {% endif %}
+        <ul class="list-group">
+            {% for item in items %}
+            	<li class="list-group-item">
+                    <h5 class="mb-5">{{ item.trimestre.trimestre }}</h5>
+                    <div class="row">
+                        {% for note in item.notes %}
+                            <label class="col-md-4 mb-5">{{ note.matiere.matiere }}: {{ note.note }} /{% notation note.matiere.coefficient %}</label>
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3 mb-5 text-center">
+                            <strong class="text-center">TOTAL</strong><br>
+                            <strong class="text-center text-danger">{% calcul_total item.notes %} /{% objectif_points item.notes %}</strong>
+                        </label>
+                        <label class="col-md-3 mb-5 text-center">
+                            <strong class="text-center">MOYENNE</strong><br>
+                            <strong class="text-center text-danger">{% calcul_moyenne item.notes %} /10</strong>
+                        </label>
+                        <label class="col-md-3 mb-5 text-center">
+                            <strong class="text-center">RANG</strong><br>
+                            <strong class="text-center text-danger">{% get_rang studient.studient item.trimestre as rang %}{{ rang.rang }}{{ rang.indice }} /{{ rang.effectif }} &eacute;l&egrave;ves</strong>
+                        </label>
+                        <label class="col-md-3 mb-5 text-center">
+                            <strong class="text-center">APPRECIATION</strong><br>
+                            <strong class="text-center text-danger">{% appreciation item.notes %}</strong>
+                        </label>
+                    </div>
+                </li>
+                <br>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+{% endblock %}

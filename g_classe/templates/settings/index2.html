@@ -1,0 +1,68 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form }}
+                        <hr>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block" type="submit">
+                                Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="app_form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <th>MATI&Egrave;RES</th>
+                                </div>
+                                <div class="col-md-6">
+                                    <th>COEFFICIENT</th>
+                                </div>
+                            </div>
+                            <div v-for="r in fields">
+                                <br>
+                                <div class="row">
+                                    {% for fd in d_form %}
+                                        {% for f in fd%}
+                                            <div class="col-md-6">
+                                                {{ f }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" @click="generateFields">Ajouter une mati&egrave;re</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+        let vm = new Vue({
+            el: '#app_form',
+            data: {
+                fields: []
+            },
+            methods: {
+                generateFields: function(e) {
+                    this.fields.push({field: ''});
+                }
+            }
+        });
+    </script>
+{% endblock extra_js %}
+
+
+

@@ -1,0 +1,61 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <hr>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block" type="submit">
+                                Sauvegarder
+                            </button>
+                        </div>
+                   </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div id="app_form">
+                        <table class="table table-bordered table-striped table-responsive">
+                            <tbody>
+                            {% for item in items %}
+                                <tr>
+                                    <th>{{ item.annee_scolaire }}</th>
+                                    <th>{{ item.start }}</th>
+                                    <th>{{ item.end }}</th>
+                                    <th>{{ item.ecole }}</th>
+                                    <th>{{ item.classe }}</th>
+                                    <th>{{ item.status }}</th>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+        let vm = new Vue({
+            el: '#app_form',
+            data: {
+                fields: []
+            },
+            methods: {
+                generateFields: function(e) {
+                    this.fields.push({field: ''});
+                }
+            }
+        });
+    </script>
+{% endblock extra_js %}
+
+
+

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+{% load tag %}
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Take Course</title>
+    <meta name="robots" content="noindex">
+    {% include "includes/styles.html" %}
+    {% if messages %}
+        <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(event) {
+            toastr.options = { "closeButton": true, "debug": false, "newestOnTop": true,
+                "progressBar": false, "positionClass": "toast-top-right", "preventDuplicates": true,
+                "onclick": null, "showDuration": "300", "hideDuration": "1000", "timeOut": "5000",
+                "extendedTimeOut": "1000", "showEasing": "swing", "hideEasing": "linear",
+                "showMethod": "fadeIn", "hideMethod": "fadeOut" };
+            {% autoescape off %}
+                {% for msg in messages %}
+                    toastr.{{ msg.level_tag }}("{{ msg }}");
+                {% endfor %}
+            {% endautoescape %}
+        });
+        </script>
+    {% endif %}
+</head>
+<body class="layout-default">
+    <div class="preloader"></div>
+    <div class="mdk-header-layout js-mdk-header-layout">
+        {% include 'includes/header.html' %}
+        <!-- Header Layout Content -->
+        <div class="mdk-header-layout__content">
+            <div class="mdk-drawer-layout js-mdk-drawer-layout" data-push data-responsive-width="992px">
+                <div class="mdk-drawer-layout__content page">
+                    <div class="container-fluid  page__heading-container">
+                        <div class="page__heading">
+                        </div>
+                    </div>
+                    <div class="container-fluid page__container">
+                        {% block content %}{% endblock content %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="app-settings">
+        <app-settings layout-active="default" :layout-location="{
+      'default': 'student-course.html',
+      'fixed': 'fixed-student-course.html',
+      'fluid': 'fluid-student-course.html',
+      'mini': 'mini-student-course.html'
+    }"></app-settings>
+    </div>
+    {% include "includes/scripts.html" %}
+    <div id="modal-standard" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-standard-title" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-standard-title">Standard modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.management_form }}
+                    <div class="modal-body">
+                        <input type="hidden" class="studient_id" name="studient_id">
+                        <div class="form-group">
+                            <label for="">Choisir le trimestre</label>
+                            <select name="trimestre_id" id="trimestre_id" class="form-control">
+                                <option>----</option>
+                                {% for trimestre in trimestres %}
+                                    <option value="{{ trimestre.id }}">{{ trimestre.trimestre }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">MATIERE</div>
+                            <div class="col-md-6">NOTE</div>
+                        </div>
+                        {% for f in form %}
+
+                            <div class="row">
+                            {% for fld in f %}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ fld }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="noteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                </div>
+                <div class="modal-body">
+                    <h2>My Modal</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block extra_js %}{% endblock extra_js %}
+</body>
+</html>

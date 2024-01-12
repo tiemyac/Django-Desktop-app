@@ -1,0 +1,36 @@
+{% extends 'layout/base.html' %}
+{% load tag %}
+{% block content %}
+<div class="card">
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>&Eacute;l&egrave;ve</th>
+                <th>Trimestre</th>
+                {% for mat in fields %}
+                    <th>{{ mat.matiere.matiere }}</th>
+                {% endfor %}
+                <th>TOTAL</th>
+                <th>MOYENNE</th>
+                <th>RANG</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.studient.nom }} {{ item.studient.prenom }}</td>
+                    <td>{{ item.trimestre.trimestre }}</td>
+                    {% for mat in item.notes %}
+                        <td>{{ mat.note }}</td>
+                    {% endfor %}
+                    <td>{% calcul_total item.notes %}</td>
+                    <td>{% calcul_moyenne item.notes %}</td>
+                    <td>{% get_rang item.studient item.trimestre as rang %}{{ rang.rang }}{{ rang.indice }} /{{ rang.effectif }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

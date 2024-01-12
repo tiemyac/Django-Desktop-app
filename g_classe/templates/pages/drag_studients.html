@@ -1,0 +1,164 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block content %}
+    {% csrf_token %}
+    <div class="row" id="list-studients" data-url="{% url 'old_studient' %}">
+        <div class="col-md">
+            <div class="card shadow-none border bg-light">
+                <div class="card-header">
+                    <label for="">Choisir l'année scolaire</label>
+                    <select name="" id="selectYear" class="form-control">
+                        {% for i_year in i_years %}
+                            <option value="{{ i_year.pk }}">{{ i_year.annee_scolaire }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div class="text-label mb-3">
+                        Liste des &eacute;l&egrave;ves
+                    </div>
+                    <div id="cards-moves-left" class="card-list">
+                        <div class="card" v-for="(item, index) in items" :id="item.id">
+                            <div class="card-body media align-items-center">
+                                <div class="media-left mr-3">
+                                    <div class="avatar">
+                                        <img v-if="item.sexe === 'F'" src="{% static 'assets/images/login/icon-female.jpg' %}" alt="Avatar" class="avatar-img rounded-circle">
+                                        <img v-if="item.sexe === 'M'" src="{% static 'assets/images/login/icon-male.jpg' %}" alt="Avatar" class="avatar-img rounded-circle">
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <strong v-html="item.name"></strong><br>
+                                    <span class="text-muted" v-html="item.naissance"></span>
+                                </div>
+                                <div class="media-right ml-3">
+                                    <span class="js-dragula-handle fa fa-arrows-alt" style="cursor: move;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card shadow-none border bg-light">
+                <div class="card-body">
+                    <div class="text-label mb-3">Effectif actuel</div>
+                    <div id="cards-moves-right" class="card-list" draggable="false">
+                        {% for studient in studients %}
+                        	<div class="card">
+                                <div class="card-body media align-items-center">
+                                    <div class="media-left mr-3">
+                                        <div class="avatar">
+                                            {% if studient.studient.sexe == 'F' %}
+                                                <img src="{% static 'assets/images/login/icon-female.jpg' %}" alt="Avatar" class="avatar-img rounded-circle">
+                                             {% else %}
+                                                <img src="{% static 'assets/images/login/icon-male.jpg' %}" alt="Avatar" class="avatar-img rounded-circle">
+                                             {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <strong>{{ studient.studient.nom }} {{ studient.studient.prenom }}</strong><br>
+                                        <span class="text-muted">{{ studient.studient.naissance }}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if not studients %}
+                        	<div class="card">
+                                <div class="card-body media align-items-center">
+                                    <div class="media-left mr-3">
+                                        <div class="avatar">
+
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1>Aucun élève</h1>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+        (function() {
+            'use strict';
+            var drake = dragula([document.querySelector('#cards-moves-left'), document.querySelector('#cards-moves-right')]);
+
+            dragula([document.querySelector('#cards-moves-right')],{
+                accepts: function (el, target, source, sibling) {
+                    return false;
+                },
+                direction: 'vertical',
+            });
+            drake.on('drop', function (el, target, source, sibling) {
+                const swalWithBootstrapButtons = Swal.mixin({
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                  },
+                  buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                  title: 'Êtes-vous sûre?',
+                  text: "Voulez-vous vraiment effectuer ce déplacement!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Oui, le déplacer!',
+                  cancelButtonText: 'Non, annuler!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    $.ajax({
+                      method: "POST",
+                      headers: {'X-CSRFToken': csrftoken},
+                      mode: 'same-origin', // Do not send CSRF token to another domain.
+                      url: "{% url 'on_drag_studient' %}",
+                      data: {'studient': el.id},
+                      error: function(result){
+                        swalWithBootstrapButtons.fire(
+                              'Echec',
+                              "Echec de déplacement! Echec lors de l'opération!",
+                              'error'
+                            );
+                            location.reload(true);
+                      }
+                    }).done(function( msg ) {
+                        swalWithBootstrapButtons.fire(
+                              'Déplacé!',
+                              'Votre opération a été effectuée',
+                              'success'
+                            );
+                        setTimeout(function(){
+                            location.reload(true);
+                        }, 2000)
+                      });
+                  } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Annuler',
+                      "Vous avez annulé l'opération :)",
+                      'info'
+                    )
+                    setTimeout(function(){
+                        location.reload(true);
+                    }, 2000)
+                  }
+                });
+            });
+
+        })()
+
+    </script>
+{% endblock extra_js %}

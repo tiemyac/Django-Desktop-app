@@ -1,0 +1,31 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{% static 'assets/images/author.jpg' %}" class="" alt="" style="width: 100%;height: 100%;">
+                    <h5 class="text-center text-info">TIEMTORE Yacouba</h5>
+                    <h6 class="text-center text-info">tiemyac1@gmail.com</h6>
+                    <p class="text-center text-info">(+226) 71 74 97 96 # 74 26 10 28</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-success">A PROPOS</h4>
+                    <p>
+                        Ce logiciel a été conçu par <span class="text-primary">M. TIEMTORE Yacouba</span>, Instituteur Adjoint Certifié (IAC) en Décembre 2023
+                        dans le but de gérer sa classe et aussi permettre à ses coll&egrave;gues qui souhaitent &eacute;galement
+                        faire usage pour g&eacute;rer leur classe.
+                    </p>
+                    <p>
+                        Vous trouverez le guide d'utilisation dans la section <a href="{% url 'guide' %}">Documentation</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

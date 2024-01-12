@@ -1,0 +1,115 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+    <div id="synoptiqueTable">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="">Trimestre en cours : </label>
+                        <select name="listTrimestres" id="listTrimestres">
+                            {% for trimestre in trimestres %}
+                                <option value="{{ trimestre.pk }}">{{ trimestre.trimestre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped"  id="synoptiqueUrl" data-url="{% url 'get_synoptique' %}">
+                    <thead class="text-bold">
+                        <tr class="text-center">
+                            <th rowspan="2"></th>
+                            <th v-bind:colspan="(items_p.length)*3">MATIERES</th>
+                        </tr>
+                        <tr>
+                            {% for column in columns %}
+                                <th colspan="3">{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th></th>
+                            {% for column in columns %}
+                                <th>G</th>
+                                <th class="text-danger">F</th>
+                                <th class="text-success">T</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0 - 4.99</td>
+                        <template v-for="item in items_p">
+                                <template v-for="(column, indexColumn) in columns_p">
+                                    <td v-html="item[column]" :class="{'text-danger': column=='p_f'}"></td>
+                                </template>
+                                <td class="text-success" v-html="item['p_m']+item['p_f']"></td>
+                        </template>
+                        </tr>
+                        <tr>
+                            <td>5 - 10</td>
+                        <template v-for="item in items">
+                                <template v-for="(column, indexColumn) in columns_m">
+                                    <td v-html="item[column]" :class="{'text-danger': column=='m_f'}"></td>
+                                </template>
+                                <td class="text-success text-bold" v-html="item['m_m']+item['m_f']"></td>
+                        </template>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    new Vue({
+        el: "#synoptiqueTable",
+        data() {
+            return {
+                items: [],
+                items_p: [],
+                columns_m: [],
+                columns_p: [],
+                trimSelect: "",
+            }
+        },
+        mounted: function () {
+            var that = this;
+            setTimeout(function () {
+                that.fetchSynoptique("");
+                that.fetchTrimestre();
+            }, 1000);
+        },
+        methods: {
+            fetchSynoptique: function(trimestre) {
+                var trimestreSelected = $('#synoptiqueUrl');
+                var that = this;
+                $.ajax({
+                    url: trimestreSelected.data('url'),
+                    method: 'get',
+                    data: {'trimestre': trimestre},
+                    success: function(response) {
+                        that.items = response["data1"];
+                        that.items_p = response["data2"];
+                        that.columns_m = response["columns_m"];
+                        that.columns_p = response["columns_p"];
+                    },
+                });
+            },
+            fetchTrimestre: function () {
+            var that = this;
+            var trimestreSelector = $('#listTrimestres');
+            trimestreSelector.select2({
+                placeholder: '-- Selectionnez le trimestre --',
+            });
+            trimestreSelector.on('select2:select', function (e) {
+                console.log(e.params.data.id);
+                that.fetchSynoptique(e.params.data.id);
+            });
+        },
+        }
+    });
+</script>
+{% endblock extra_js %}
